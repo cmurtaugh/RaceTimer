@@ -1,0 +1,9 @@
+on: [push, pull_request]
+jobs:
+  compile:
+    steps:
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: "arduino:avr:uno"
+          libraries: |
+            - name: LiquidCrystal

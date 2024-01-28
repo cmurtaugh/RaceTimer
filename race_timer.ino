@@ -15,11 +15,11 @@ const int READY = 1;
 const int RUNNING = 2;
 const int FINISHED = 3;
 
-int raceState = READY;
+volatile int raceState = READY;
 int buttonState = 0;
 
-unsigned long startTime = 0;
-unsigned long endTime = 0;
+volatile unsigned long startTime = 0;
+volatile unsigned long endTime = 0;
 float duration = 0;
 
 void setup() {
@@ -33,7 +33,7 @@ void setup() {
   pinMode(starterPin, INPUT);
 
   attachInterrupt(digitalPinToInterrupt(starterPin), startRace, HIGH);
-  attachInterrupt(digitalPinToInterrupt(sensorPin), finshRace, HIGH);
+  attachInterrupt(digitalPinToInterrupt(sensorPin), finishRace, HIGH);
 }
 
 void loop() {
@@ -51,15 +51,14 @@ void loop() {
     }
   }
 
-  if (raceState == FINISHED) {  
-    // calculate the time 
-    duration = (endTime - startTime) / 1000000; 
-    
+  if (raceState == FINISHED) {
+    // calculate the time
+    duration = (endTime - startTime) / 1000000;
+
     // print the results to the screen
     lcd.print(duration);
   }
 }
-
 
 void startRace() {
   if (raceState == READY) {
@@ -73,6 +72,6 @@ void finishRace() {
   if (raceState = RUNNING) {
     // stop the timer
     endTime = micros();
-    raceState = FINISHED
+    raceState = FINISHED;
   }
 }
